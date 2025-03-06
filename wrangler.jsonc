@@ -1,0 +1,19 @@
+{
+  "name": "bbs",
+  "compatibility_date": "2025-03-04",
+  "pages_build_output_dir": "./dist",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "vars": {
+    "JWT_SECRET": "DDmd1iXSP109x84kXTwYsxMA8cEjmcV6/Tm22U+wmLQ=",
+    "GRAVATAR_BASE_URL": "https://cdn.sep.cc/avatar/"
+  },
+  "d1_databases": [
+     {
+       "binding": "DB",
+       "database_name": "bbs_lengyu",
+       "database_id": "114010e5-73b4-4c11-8c15-dd936569a0e8D"
+     }
+  ]
+}
