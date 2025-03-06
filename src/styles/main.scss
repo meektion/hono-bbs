@@ -1,0 +1,41 @@
+// 导入 Pico CSS
+@use "@picocss/pico/scss/pico.scss" as pico with (
+  $theme-color: "slate"  
+);
+
+
+
+// 响应式字体大小设置
+@media (min-width: 576px) {
+  :root {
+    --pico-font-size: 100%;
+  }
+}
+
+@media (min-width: 768px) {
+  :root {
+    --pico-font-size: 100%;
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --pico-font-size: 100%;
+  }
+}
+
+@media (min-width: 1280px) {
+  :root {
+    --pico-font-size: 95%;
+  }
+}
+
+
+
+
+pre>code{
+  text-wrap:auto;
+}
+[un-cloak] {
+  display: none;
+}

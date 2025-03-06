@@ -1,0 +1,30 @@
+{
+  "name": "hono-bbs",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build:css": "node build-css.js",
+    "build": "vite build && npm run build:css",
+    "preview": "wrangler pages dev",
+    "deploy": "pnpm run build && wrangler pages deploy"
+  },
+  "dependencies": {
+    "@picocss/pico": "^2.0.6",
+    "bcryptjs": "^3.0.2",
+    "hono": "^4.7.2",
+    "marked": "^15.0.7",
+    "sanitize-html": "^2.14.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250214.0",
+    "@hono/vite-build": "^1.2.0",
+    "@hono/vite-dev-server": "^0.18.2",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/node": "^22.13.9",
+    "@types/sanitize-html": "^2.13.0",
+    "sass": "^1.85.1",
+    "typed-htmx": "^0.3.1",
+    "vite": "^6.1.1",
+    "wrangler": "^3.112.0"
+  }
+}
