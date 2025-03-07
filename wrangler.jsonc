@@ -1,5 +1,5 @@
 {
-  "name": "bbs",
+  "name": "hono-bbs",
   "compatibility_date": "2025-03-04",
   "pages_build_output_dir": "./dist",
   "compatibility_flags": [
