@@ -4,8 +4,8 @@ import { verify } from "hono/jwt";
 import { PostService } from "../services/post.service";
 import { UserService } from "../services/user.service";
 import { TagService } from "../services/tag.service";
-import type { Bindings, Variables } from "../types/app";
-import { ExtendedJWTPayload } from "../types/app";
+import type { Bindings, Variables } from "../types";
+import { ExtendedJWTPayload } from "../types";
 
 const index = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
@@ -71,12 +71,12 @@ index.get("/posts", async (c) => {
 
   return c.render(
     <article>
-      <header>
-        <div className="tag-list flex flex-wrap gap-2 ">
+      <header class="mb-2">
+        <div class="flex items-center text-sm ">
           <a
             href="/posts"
-            className={`p-1 rounded text-sm ${
-              !tagName && !username ? "bg-gray-2" : "bg-primary"
+            class={`py-1 px-2 color-[var(--primary-inverse)] no-underline rounded ${
+              !tagName && !username ? "bg-gray-2" : ""
             }`}
           >
             全部
@@ -85,8 +85,8 @@ index.get("/posts", async (c) => {
             <a
               key={tag.id}
               href={`/posts?tag=${tag.name}`}
-              className={`p-1 rounded text-sm ${
-                tagName === tag.name ? "bg-gray-2" : "bg-primary"
+              class={`py-1 px-2 color-[var(--primary-inverse)] rounded no-underline ${
+                tagName === tag.name ? "bg-gray-2" : ""
               }`}
             >
               {tag.name}({tag.post_count})
@@ -97,43 +97,47 @@ index.get("/posts", async (c) => {
       {tagName && <h6>标签: {tagName}</h6>}
       {username && <h6>用户: {username} 的帖子</h6>}
       {posts.length > 0 ? (
-        <ul className="flex flex-col space-y-2">
+        <ul class="space-y-1 pl-0">
           {posts.map((post) => (
-            <li key={post.id} className="flex space-x-2 items-start">
-              <span data-timestamp={post.created_at}>
-                {new Date(post.created_at + "Z").toLocaleString()}
-              </span>
+            <li
+              key={post.id}
+              class="flex-wrap space-y-1 md:space-y-0 list-none flex items-center justify-between"
+            >
               <a
-                className="whitespace-nowrap overflow-hidden text-ellipsis max-w-md"
+                class="sm:flex-1 text-normal no-underline"
                 href={`/posts/${post.id}`}
               >
                 {post.title}
-              </a>
-              {post.comment_count !== undefined && post.comment_count > 0 && (
-                <span className="text-gray-500 ">
-                  ({post.comment_count}条评论)
-                </span>
-              )}
-              <span className="bg-gray-2 p-1 rounded text-xs mx-4">
-                {post.tag && (
-                  <span>
-                    <a href={`/posts?tag=${post.tag}`}>{post.tag}</a>
-                  </span>
+                {post.comment_count !== undefined && post.comment_count > 0 && (
+                  <span>({post.comment_count}条评论)</span>
                 )}
-              </span>
+              </a>
 
-              {usernameToAvatar[post.author] && (
-                <img
-                  src={usernameToAvatar[post.author]}
-                  alt={`${post.author}'s avatar`}
-                  className="avatar-small"
-                  style={{
-                    width: "20px",
-                    height: "20px",
-                    borderRadius: "50%",
-                  }}
-                />
-              )}              
+              <div class="flex items-center text-sm space-x-2">
+                {post.tag && (
+                  <a
+                    class="bg-gray-2 p-1 rounded text-xs no-underline color-[var(--primary-inverse)]"
+                    href={`/posts?tag=${post.tag}`}
+                  >
+                    {post.tag}
+                  </a>
+                )}
+
+                <span class="post-time" data-timestamp={post.created_at}>
+                  {new Date(post.created_at + "Z").toLocaleString()}
+                </span>
+
+                {usernameToAvatar[post.author] && (
+                  <img
+                    hx-get={`profile/${post.author}`}
+                    hx-target="body"
+                    hx-push-url="true"
+                    src={usernameToAvatar[post.author]}
+                    alt={`${post.author}'s avatar`}
+                    class="w-5 h-5 rounded-full cursor-pointer"
+                  />
+                )}
+              </div>
             </li>
           ))}
         </ul>

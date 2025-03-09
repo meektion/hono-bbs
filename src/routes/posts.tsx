@@ -21,7 +21,7 @@ posts.get("/new", jwtAuth, async (c) => {
 
   return c.render(
     <article>
-      <header>发布新帖子</header>
+      <header class="mb-2 text-xl font-bold">发布新帖子</header>
       <form action="/posts" method="post" id="post-form">
         <div>
           <label for="title">标题</label>
@@ -143,32 +143,31 @@ posts.get("/:id", async (c) => {
 
   return c.render(
     <div>
-      <article className="post">
-        <header>
-          <div className="">
-            <span className="fw-700 text-2xl mr-4">{post.title}</span>
-          </div>
+      <article class="post">
+        <header class="mb-2">
+          <div class="text-xl font-bold">{post.title}</div>
         </header>
 
         <div
-          className="post-content"
+          class="post-content"
           dangerouslySetInnerHTML={{ __html: post.content }}
         ></div>
 
-        <footer className="flex space-x-2 items-center">
-         
-          <span>
-            <a href={`/posts?username=${post.author}`}>{post.author}</a>
+        <footer class="flex items-center space-x-2 text-sm">
+          <span class="post-author">
+            <a href={`/profile/${post.author}`}>{post.author}</a>
           </span>
 
           {post.tag && (
-            <span className="text-sm bg-gray-2 p-1 rounded">
-              <a href={`/posts?tag=${post.tag}`}>{post.tag}</a>
-            </span>
+            <a
+              class="bg-gray-2 p-1 rounded text-xs no-underline color-[var(--primary-inverse)]"
+              href={`/posts?tag=${post.tag}`}
+            >
+              {post.tag}
+            </a>
           )}
 
-
-          <span className="post-date" data-timestamp={post.created_at}>
+          <span data-timestamp={post.created_at}>
             {new Date(post.created_at + "Z").toLocaleString()}
           </span>
           {currentUser && (
@@ -183,7 +182,7 @@ posts.get("/:id", async (c) => {
                     xmlns="http://www.w3.org/2000/svg"
                     xmlns:xlink="http://www.w3.org/1999/xlink"
                     viewBox="0 0 24 24"
-                    className="w-4 h-4 cursor-pointer"
+                    class="w-5 h-5 flex items-center justify-center cursor-pointer color-[var(--primary-inverse)]"
                   >
                     <g
                       fill="none"
@@ -205,7 +204,7 @@ posts.get("/:id", async (c) => {
                     xmlns="http://www.w3.org/2000/svg"
                     xmlns:xlink="http://www.w3.org/1999/xlink"
                     viewBox="0 0 32 32"
-                    className="w-4 h-4 cursor-pointer"
+                    class="w-5 h-5 flex items-center justify-center cursor-pointer color-[var(--primary-inverse)]"
                   >
                     <path d="M12 12h2v12h-2z" fill="currentColor"></path>
                     <path d="M18 12h2v12h-2z" fill="currentColor"></path>
@@ -226,7 +225,7 @@ posts.get("/:id", async (c) => {
                     xmlns="http://www.w3.org/2000/svg"
                     xmlns:xlink="http://www.w3.org/1999/xlink"
                     viewBox="0 0 24 24"
-                    className="w-4 h-4 cursor-pointer"
+                    class="w-5 h-5 color-[var(--primary-inverse)] items-center justify-center cursor-pointer"
                   >
                     <g
                       fill="none"
@@ -247,33 +246,34 @@ posts.get("/:id", async (c) => {
         </footer>
       </article>
 
-      <section className="comments">
+      <section class="comments">
         {comments.length > 0 ? (
           <>
-            <div className="text-xl font-bold my-4">评论 ({totalComments})</div>
-            <div className="flex flex-col space-y-2">
+            <div class="comments-header">评论 ({totalComments})</div>
+            <div class="comments-list">
               {comments.map((comment) => (
                 <div key={comment.id}>
                   <article>
-                    <header>
-                      <div className="flex items-center space-x-2">
-                        <span className="text-gray-500 flex items-center space-x-2">
-                          {comment.author_avatar && (
-                            <img
-                              src={`${c.env.GRAVATAR_BASE_URL}${comment.author_avatar}?d=identicon`}
-                              alt={`${comment.author}的头像`}
-                              className="w-6 h-6 rounded-full "
-                            />
-                          )}
-
-                          <a href={`/posts?username=${comment.author}`}>
-                            {comment.author}
-                          </a>
-                          <span data-timestamp={comment.created_at}>
-                            {new Date(
-                              comment.created_at + "Z"
-                            ).toLocaleString()}
-                          </span>
+                    <header class="mb-2 text-sm">
+                      <div class="flex items-center space-x-1">
+                        {comment.author_avatar && (
+                          <img
+                            src={`${c.env.GRAVATAR_BASE_URL}${comment.author_avatar}?d=identicon`}
+                            alt={`${comment.author}'s avatar`}
+                            class="w-5 h-5 rounded-full"
+                            hx-get={`profile/${comment.author}`}
+                            hx-target="body"
+                            hx-push-url="true"
+                          />
+                        )}
+                        <a href={`/profile/${comment.author}`}>
+                          {comment.author}
+                        </a>
+                        <span
+                          class="comment-date"
+                          data-timestamp={comment.created_at}
+                        >
+                          {new Date(comment.created_at + "Z").toLocaleString()}
                         </span>
                         {currentUser && (
                           <>
@@ -287,7 +287,7 @@ posts.get("/:id", async (c) => {
                                   xmlns="http://www.w3.org/2000/svg"
                                   xmlns:xlink="http://www.w3.org/1999/xlink"
                                   viewBox="0 0 24 24"
-                                  className="w-4 h-4 cursor-pointer"
+                                  class="w-5 h-5 flex items-center justify-center cursor-pointer color-[var(--primary-inverse)]"
                                 >
                                   <g
                                     fill="none"
@@ -309,15 +309,24 @@ posts.get("/:id", async (c) => {
                                   xmlns="http://www.w3.org/2000/svg"
                                   xmlns:xlink="http://www.w3.org/1999/xlink"
                                   viewBox="0 0 32 32"
-                                  className="w-4 h-4 cursor-pointer"
+                                  class="w-5 h-5 flex items-center justify-center cursor-pointer color-[var(--primary-inverse)]"
                                 >
-                                  <path d="M12 12h2v12h-2z" fill="currentColor"></path>
-                                  <path d="M18 12h2v12h-2z" fill="currentColor"></path>
+                                  <path
+                                    d="M12 12h2v12h-2z"
+                                    fill="currentColor"
+                                  ></path>
+                                  <path
+                                    d="M18 12h2v12h-2z"
+                                    fill="currentColor"
+                                  ></path>
                                   <path
                                     d="M4 6v2h2v20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8h2V6zm4 22V8h16v20z"
                                     fill="currentColor"
                                   ></path>
-                                  <path d="M12 2h8v2h-8z" fill="currentColor"></path>
+                                  <path
+                                    d="M12 2h8v2h-8z"
+                                    fill="currentColor"
+                                  ></path>
                                 </svg>
                               </>
                             ) : (
@@ -330,7 +339,7 @@ posts.get("/:id", async (c) => {
                                   xmlns="http://www.w3.org/2000/svg"
                                   xmlns:xlink="http://www.w3.org/1999/xlink"
                                   viewBox="0 0 24 24"
-                                  className="w-4 h-4 cursor-pointer"
+                                  class="w-5 h-5 flex items-center justify-center cursor-pointer color-[var(--primary-inverse)]"
                                 >
                                   <g
                                     fill="none"
@@ -348,13 +357,14 @@ posts.get("/:id", async (c) => {
                             )}
                           </>
                         )}
-                        <span className="bg-gray-1 rounded px-2">
+                       
+                        <span class="comment-floor">
                           #{comment.floor_number}楼
                         </span>
                       </div>
                     </header>
                     <div
-                      className="comment-content"
+                      class=""
                       dangerouslySetInnerHTML={{
                         __html: parseMarkdown(comment.content),
                       }}
@@ -363,17 +373,13 @@ posts.get("/:id", async (c) => {
                 </div>
               ))}
             </div>
-            <div className="pagination mt-4 flex justify-center">
+            <div class="pagination">
               {totalPages > 1 &&
                 Array.from({ length: totalPages }, (_, index) => (
                   <a
                     key={index}
                     href={`/posts/${id}?page=${index + 1}`}
-                    className={`px-3 py-2 mx-1 ${
-                      page === index + 1
-                        ? "bg-blue-500 text-white"
-                        : "bg-gray-200"
-                    } rounded`}
+                    class={`page-item ${page === index + 1 ? "active" : ""}`}
                   >
                     {index + 1}
                   </a>
@@ -389,7 +395,7 @@ posts.get("/:id", async (c) => {
             <form
               action={`/posts/${id}/comment`}
               method="post"
-              className="comment-form"
+              class="comment-form"
               id="comment-form"
             >
               <h4>发表评论</h4>
@@ -399,7 +405,7 @@ posts.get("/:id", async (c) => {
                   name="content"
                   rows={5}
                   required
-                  placeholder="在此输入评论内容，支持 Markdown 格式..."
+                  placeholder="在此输入评论内容..."
                 ></textarea>
               </div>
               <button type="submit">提交评论</button>
@@ -475,7 +481,7 @@ posts.get("/:id/edit", jwtAuth, async (c) => {
             id="content"
             name="content"
             required
-            rows={10}
+            rows={20}
             placeholder="在此输入内容，支持 Markdown 格式..."
           >
             {editContent.trim()}
@@ -544,7 +550,7 @@ posts.post("/:id/edit", jwtAuth, async (c) => {
       <div>
         <h1>编辑失败</h1>
         <p>标题和内容不能为空</p>
-        <a href={`/posts/${id}/edit`} className="button">
+        <a href={`/posts/${id}/edit`} class="button">
           返回
         </a>
       </div>,
@@ -556,7 +562,7 @@ posts.post("/:id/edit", jwtAuth, async (c) => {
     title,
     content: parsedContent,
     rawContent: content, // 保存原始 Markdown
-    tag: tag || null,
+    tag,
   });
 
   return c.redirect(`/posts/${id}`);
@@ -599,13 +605,13 @@ posts.get("/:id/delete", jwtAuth, async (c) => {
   return c.render(
     <article>
       <header>删除帖子</header>
-      <div className="card">
+      <div class="card">
         <h3>{post.title}</h3>
         <p>作者: {post.author}</p>
         <p>发布时间:{new Date(post.created_at + "Z").toLocaleDateString()}</p>
-        <p className="warning">确定要删除这篇帖子吗？此操作不可撤销。</p>
+        <p class="warning">确定要删除这篇帖子吗？此操作不可撤销。</p>
       </div>
-      <footer className="flex space-x-2 items-center">
+      <footer class="flex space-x-2 items-center">
         <button
           hx-post={`/posts/${id}/delete`}
           hx-target="body"
@@ -617,7 +623,7 @@ posts.get("/:id/delete", jwtAuth, async (c) => {
           hx-get={`/posts/${id}`}
           hx-target="body"
           hx-push-url="true"
-          className="contrast"
+          class="contrast"
         >
           取消
         </button>
@@ -668,157 +674,146 @@ posts.post("/:id/comment", jwtAuth, async (c) => {
 });
 
 // 编辑评论页面 - 管理员可编辑任何评论，普通用户只能编辑自己的评论
-posts.get(
-  "/:postId/comment/:commentId/edit",
-  jwtAuth,
-  async (c) => {
-    const postId = parseInt(c.req.param("postId"));
-    const commentId = parseInt(c.req.param("commentId"));
-    const user = c.get("user");
+posts.get("/:postId/comment/:commentId/edit", jwtAuth, async (c) => {
+  const postId = parseInt(c.req.param("postId"));
+  const commentId = parseInt(c.req.param("commentId"));
+  const user = c.get("user");
 
-    const postService = PostService.getInstance(c.env.DB);
-    const commentService = CommentService.getInstance(c.env.DB);
+  const postService = PostService.getInstance(c.env.DB);
+  const commentService = CommentService.getInstance(c.env.DB);
 
-    const post = await postService.getPostById(postId);
-    const comment = await commentService.getCommentById(commentId);
+  const post = await postService.getPostById(postId);
+  const comment = await commentService.getCommentById(commentId);
 
-    if (!post || !comment) {
-      return c.render(
-        <div>
-          <h1>评论不存在</h1>
-          <p>您请求的评论不存在或已被删除</p>
-          <a href={`/posts/${postId}`}>返回帖子</a>
-        </div>,
-        { title: "评论不存在 - Hono BBS" }
-      );
-    }
-
-    // 检查权限 - 只有评论作者或管理员可以编辑
-    if (user.username !== comment.author && user.role !== "admin") {
-      return c.render(
-        <div>
-          <h1>权限错误</h1>
-          <p>您没有权限编辑此评论</p>
-          <a href={`/posts/${postId}`}>返回帖子</a>
-        </div>,
-        { title: "权限错误 - Hono BBS", user }
-      );
-    }
-
+  if (!post || !comment) {
     return c.render(
-      <article>
-        <header>编辑评论</header>
-        <p>
-          帖子: <a href={`/posts/${postId}`}>{post.title}</a>
-        </p>
-        <form
-          action={`/posts/${postId}/comment/${commentId}/edit`}
-          method="post"
-          className="form-card"
-          id="comment-form"
-        >
-          <div className="form-group">
-            <label htmlFor="content">评论内容:</label>
-            <textarea
-              id="content"
-              name="content"
-              rows={5}
-              required
-              placeholder="在此输入评论内容..."
-            >
-              {(comment.raw_content || comment.content).trim()}
-            </textarea>
-          </div>
-          <button
-            type="submit"
-            className="bg-blue-500 text-white px-4 py-2 rounded"
-          >
-            更新评论
-          </button>
-        </form>
-      </article>,
-      {
-        title: "编辑评论 - Hono BBS",
-        user: c.get("user"),
-      }
+      <div>
+        <h1>评论不存在</h1>
+        <p>您请求的评论不存在或已被删除</p>
+        <a href={`/posts/${postId}`}>返回帖子</a>
+      </div>,
+      { title: "评论不存在 - Hono BBS" }
     );
   }
-);
+
+  // 检查权限 - 只有评论作者或管理员可以编辑
+  if (user.username !== comment.author && user.role !== "admin") {
+    return c.render(
+      <div>
+        <h1>权限错误</h1>
+        <p>您没有权限编辑此评论</p>
+        <a href={`/posts/${postId}`}>返回帖子</a>
+      </div>,
+      { title: "权限错误 - Hono BBS", user }
+    );
+  }
+
+  return c.render(
+    <article>
+      <header>编辑评论</header>
+      <p>
+        帖子: <a href={`/posts/${postId}`}>{post.title}</a>
+      </p>
+      <form
+        action={`/posts/${postId}/comment/${commentId}/edit`}
+        method="post"
+        class="form-card"
+        id="comment-form"
+      >
+        <div class="form-group">
+          <label htmlFor="content">评论内容:</label>
+          <textarea
+            id="content"
+            name="content"
+            rows={5}
+            required
+            placeholder="在此输入评论内容..."
+          >
+            {(comment.raw_content || comment.content).trim()}
+          </textarea>
+        </div>
+        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">
+          更新评论
+        </button>
+      </form>
+    </article>,
+    {
+      title: "编辑评论 - Hono BBS",
+      user: c.get("user"),
+    }
+  );
+});
 
 // 处理评论编辑 - 管理员可编辑任何评论，普通用户只能编辑自己的评论
-posts.post(
-  "/:postId/comment/:commentId/edit",
-  jwtAuth,
-  async (c) => {
-    const postId = parseInt(c.req.param("postId"));
-    const commentId = parseInt(c.req.param("commentId"));
-    const user = c.get("user");
+posts.post("/:postId/comment/:commentId/edit", jwtAuth, async (c) => {
+  const postId = parseInt(c.req.param("postId"));
+  const commentId = parseInt(c.req.param("commentId"));
+  const user = c.get("user");
 
-    const formData = await c.req.formData();
-    const content = (formData.get("content") as string)?.trim();
+  const formData = await c.req.formData();
+  const content = (formData.get("content") as string)?.trim();
 
-    if (!content) {
-      return c.render(
-        <div>
-          <h1>编辑评论失败</h1>
-          <p>评论内容不能为空</p>
-          <a href={`/posts/${postId}/comment/${commentId}/edit`}>返回</a>
-        </div>,
-        { title: "编辑评论失败 - Hono BBS" }
-      );
-    }
-
-    const commentService = CommentService.getInstance(c.env.DB);
-    
-    // 获取评论信息，检查权限
-    const comment = await commentService.getCommentById(commentId);
-    
-    if (!comment) {
-      return c.render(
-        <div>
-          <h1>评论不存在</h1>
-          <p>您请求的评论不存在或已被删除</p>
-          <a href={`/posts/${postId}`}>返回帖子</a>
-        </div>,
-        { title: "评论不存在 - Hono BBS" }
-      );
-    }
-    
-    // 检查权限 - 只有评论作者或管理员可以编辑
-    if (user.username !== comment.author && user.role !== "admin") {
-      return c.render(
-        <div>
-          <h1>权限错误</h1>
-          <p>您没有权限编辑此评论</p>
-          <a href={`/posts/${postId}`}>返回帖子</a>
-        </div>,
-        { title: "权限错误 - Hono BBS", user }
-      );
-    }
-
-    // 解析 Markdown
-    const parsedContent = parseMarkdown(content);
-
-    const success = await commentService.updateComment(
-      commentId,
-      parsedContent,
-      content
+  if (!content) {
+    return c.render(
+      <div>
+        <h1>编辑评论失败</h1>
+        <p>评论内容不能为空</p>
+        <a href={`/posts/${postId}/comment/${commentId}/edit`}>返回</a>
+      </div>,
+      { title: "编辑评论失败 - Hono BBS" }
     );
-
-    if (!success) {
-      return c.render(
-        <div>
-          <h1>编辑评论失败</h1>
-          <p>评论更新失败，请稍后再试</p>
-          <a href={`/posts/${postId}`}>返回帖子</a>
-        </div>,
-        { title: "编辑评论失败 - Hono BBS" }
-      );
-    }
-
-    return c.redirect(`/posts/${postId}`);
   }
-);
+
+  const commentService = CommentService.getInstance(c.env.DB);
+
+  // 获取评论信息，检查权限
+  const comment = await commentService.getCommentById(commentId);
+
+  if (!comment) {
+    return c.render(
+      <div>
+        <h1>评论不存在</h1>
+        <p>您请求的评论不存在或已被删除</p>
+        <a href={`/posts/${postId}`}>返回帖子</a>
+      </div>,
+      { title: "评论不存在 - Hono BBS" }
+    );
+  }
+
+  // 检查权限 - 只有评论作者或管理员可以编辑
+  if (user.username !== comment.author && user.role !== "admin") {
+    return c.render(
+      <div>
+        <h1>权限错误</h1>
+        <p>您没有权限编辑此评论</p>
+        <a href={`/posts/${postId}`}>返回帖子</a>
+      </div>,
+      { title: "权限错误 - Hono BBS", user }
+    );
+  }
+
+  // 解析 Markdown
+  const parsedContent = parseMarkdown(content);
+
+  const success = await commentService.updateComment(
+    commentId,
+    parsedContent,
+    content
+  );
+
+  if (!success) {
+    return c.render(
+      <div>
+        <h1>编辑评论失败</h1>
+        <p>评论更新失败，请稍后再试</p>
+        <a href={`/posts/${postId}`}>返回帖子</a>
+      </div>,
+      { title: "编辑评论失败 - Hono BBS" }
+    );
+  }
+
+  return c.redirect(`/posts/${postId}`);
+});
 
 // 删除评论确认页面 - 仅管理员可用
 posts.get(
@@ -854,12 +849,12 @@ posts.get(
           帖子: <a href={`/posts/${postId}`}>{post.title}</a>
         </p>
         <p>评论作者: {comment.author}</p>
-        <div className="p-4 border rounded my-4">
+        <div class="p-4 border rounded my-4">
           <h4>评论内容:</h4>
           <div dangerouslySetInnerHTML={{ __html: comment.content }}></div>
         </div>
 
-        <footer className="mt-4 space-x-4">
+        <footer class="mt-4 space-x-4">
           <button
             hx-post={`/posts/${postId}/comment/${commentId}/delete`}
             hx-target="body"
